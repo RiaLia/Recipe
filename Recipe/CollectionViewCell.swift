@@ -10,5 +10,8 @@ import UIKit
 
 class CollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var categoryImage: UIImageView!
+    @IBOutlet weak var categoryLabel: UILabel!
+    
+    var id: String?
 }

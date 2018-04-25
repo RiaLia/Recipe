@@ -12,10 +12,33 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
 
     @IBOutlet weak var addPhotoBtn: UIButton!
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var saveBtn: UIButton!
+    @IBOutlet weak var penBtn: UIButton!
+    @IBOutlet weak var brushBtn: UIButton!
+    @IBOutlet weak var markBtn: UIButton!
+    @IBOutlet weak var deleteBtn: UIButton!
+    var defaults = UserDefaults.standard
+    var recipies : [String : Any] = [:]
+    
+    @IBOutlet weak var canvas: UIImageView!
+    var lastPoint = CGPoint (x: 0, y: 0)
+    var firstPoint = CGPoint (x: 0, y: 0)
+    var stopPoint = CGPoint (x: 0, y: 0)
+    var swiped = false
+    var color = UIColor(red: 0.5, green: 0, blue: 0.5, alpha: 1.0)
+    
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+    
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+   
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -33,7 +56,7 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
        // imagePicker.allowsEditing = true
        
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            let cameraButton = UIAlertAction(title: "Take Photo",
+            let cameraButton = UIAlertAction(title: "Use Camera",
                                              style: .default) { (alert) -> Void in
                                                 imagePicker.sourceType = .camera
                                                 self.present(imagePicker, animated: true)
@@ -63,6 +86,7 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         let originalImage = info[UIImagePickerControllerOriginalImage] as! UIImage
         let scaledImage = originalImage.scaleImage(640)
         imageView.image = scaledImage
+        
    
         picker.dismiss(animated: true, completion: nil)
         addPhotoBtn.isHidden = true
@@ -74,13 +98,12 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
     func approvePhoto() {
         let photoApproveSheet = UIAlertController(title: "Approve Photo?", message: nil, preferredStyle: .actionSheet)
         
-        let okButton = UIAlertAction(title: "OK", style: .default) { (alert) -> Void in
-            print("Photo Approved")
-            //self.startEdditing()
+        let okButton = UIAlertAction(title: "Yes, Keep this one", style: .default) { (alert) -> Void in
+            self.startEdditing()
         }
         photoApproveSheet.addAction(okButton)
         
-        let takeNewButton = UIAlertAction(title: "Take new!", style: .default) { (alert) -> Void in
+        let takeNewButton = UIAlertAction(title: "No, Take new!", style: .default) { (alert) -> Void in
             self.addPhoto(photoApproveSheet)
            
         }
@@ -91,20 +114,198 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         present(photoApproveSheet, animated: true)
     }
     
+    
+    
+    func startEdditing() {
+        penBtn.isHidden = false
+        brushBtn.isHidden = false
+        markBtn.isHidden = false
+        saveBtn.isHidden = false
+        deleteBtn.isHidden = false
+        
+        
+        // Skapa Pan, och ev pinch
+       
+        
+    }
+    
+    
+    @IBAction func savedClicked(_ sender: Any) {
+        // Spara informationen på lämpligt ställe.
+        // kanske i en array med dictioneries i CameraModel?
+        // Keys borde då vara: Titel, Category, Image
+        // För enkelhetes skull bör vara varje recept bara var i en kategori? 
+        print("Saved Clicked")
+    }
+    
+    @IBAction func brushClicked(_ sender: Any) {
+         //Ta fram color palett
+         // Pensel för titel
+         // Spara ner makrering och kör tessa
+        
+        // Testa om det går att köra tessa i bakgrunden
+        print("Brush Clicked")
+        
+        if let maybeRecipies = defaults.dictionary(forKey: "Recipies") {
+            recipies = maybeRecipies
+        } else {
+            recipies = [:]
+        }
+        
+       
+        print(recipies)
+       
+    }
+    
+    @IBAction func penClicked(_ sender: Any) {
+         
+        
+        print("Pen Clicked")
+    }
+    
+    @IBAction func markClicked(_ sender: Any) {
+        // Kvadratisk markering för tumbnail
+        // Crop to mark
+        print("Mark Clicked")
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    @IBAction func deleteClicked(_ sender: Any) {
+        
+        let deleteSheet = UIAlertController(title: "Do you really want to delete?", message: nil, preferredStyle: .alert)
+        
+        let yesButton = UIAlertAction(title: "Yes", style: .default) { (alert) -> Void in
+            
+            self.addPhotoBtn.isHidden = false
+            self.imageView.image = nil
+            
+            self.penBtn.isHidden = true
+            self.brushBtn.isHidden = true
+            self.markBtn.isHidden = true
+            self.saveBtn.isHidden = true
+            self.deleteBtn.isHidden = true
+        }
+        deleteSheet.addAction(yesButton)
+        
+        let noButton = UIAlertAction(title: "No", style: .default) { (alert) -> Void in
 
+            
+        }
+        deleteSheet.addAction(noButton)
+        
+        
+        deleteSheet.view.tintColor = UIColor.black
+        present(deleteSheet, animated: true)
+     
+    }
     
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        swiped = false
+        canvas.image = nil
+        if let touch = touches.first {
+            lastPoint = touch.location(in: canvas)
+            firstPoint = touch.location(in: canvas)
+            print("FirstPoint = \(firstPoint)")
+        }
+    }
+    
+    
+    func drawLines(fromPoint: CGPoint, toPoint: CGPoint) {
+        UIGraphicsBeginImageContext(canvas.frame.size)
+        canvas.image?.draw(in: CGRect(x: 0, y: 0, width: canvas.frame.width, height: canvas.frame.height))
+        let contex = UIGraphicsGetCurrentContext()
+        
+        contex?.move(to: CGPoint(x: fromPoint.x, y: fromPoint.y))
+        contex?.addLine(to: CGPoint(x: toPoint.x, y: toPoint.y))
+        contex?.setBlendMode(CGBlendMode.normal)
+        contex?.setLineCap(CGLineCap.round)
+        contex?.setLineWidth(40)
+        contex?.setStrokeColor(color.cgColor)
+        
+        contex?.strokePath()
+        
+        canvas.image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        
+    }
+    
+    func drawRect(_ fromPoint: CGPoint, _ toPoint: CGPoint) {
+        UIGraphicsBeginImageContext(canvas.frame.size);
+        
+        let contexten:CGContext  = UIGraphicsGetCurrentContext()!;
+        
+        let rect = CGRect(x: (fromPoint.x - 20), y: (fromPoint.y - 20), width: ((toPoint.x - fromPoint.x) + 20), height: ((toPoint.y - fromPoint.y) + 40 ))
+        
+        // Filling
+      //  contexten.setFillColor(red: 1.0, green: 0, blue: 0, alpha: 1.0)
+      //  contexten.fill(rect)
+        
+        // Frame
+        contexten.setStrokeColor(red: 0, green: 0, blue: 0, alpha: 1.0)
+        contexten.stroke(rect)
+        
+        canvas.image = UIGraphicsGetImageFromCurrentImageContext();
+        
+        UIGraphicsEndImageContext();
+        
+        // Run tessa with rect
+    }
+    
+    
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        swiped = true
+        
+        if let touch = touches.first {
+            let currentPoint = touch.location(in: canvas)
+            drawLines(fromPoint: lastPoint, toPoint: currentPoint)
+            
+            
+            lastPoint = currentPoint
+        }
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if !swiped {
+            drawLines(fromPoint: lastPoint, toPoint: lastPoint)
+        }
+        
+        if let touch = touches.first {
+            stopPoint = touch.location(in: canvas)
+            drawRect(firstPoint, lastPoint)
+            print("StopPoint = \(stopPoint)")
+        }
+        
+    }
+    
+    @IBAction func changeColor(_ sender: UIButton) {
+        let index = sender.tag
+        
+        switch index {
+        case 1:
+            color = UIColor(red: 115.0 / 255.0, green: 250.0 / 255.0 , blue: 121.0 / 255.0, alpha: 1.0)
+        case 2:
+            color = UIColor(red: 190.0 / 255.0 , green: 48.0 / 255.0, blue: 133.0 / 255.0, alpha: 1.0)
+        case 3:
+            color = UIColor(red: 0, green: 180.0 / 255.0, blue: 1.0, alpha: 1.0)
+        default:
+            color = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0)
+        }
+    }
     
 }
+    
 
 
-
-
-
-
-
-
-// MARK: - UIImage extension
 extension UIImage {
     func scaleImage(_ maxDimension: CGFloat) -> UIImage? {
         
@@ -126,7 +327,145 @@ extension UIImage {
         return scaledImage
     }
 }
- 
+
+
+/*
+
+//
+//  ViewController.swift
+//  DemoDraw
+//
+//  Created by Ria Buhlin on 2018-04-25.
+//  Copyright © 2018 Ria Buhlin. All rights reserved.
+//
+
+import UIKit
+
+class ViewController: UIViewController {
+    
+    @IBOutlet weak var canvas: UIImageView!
+    var lastPoint = CGPoint (x: 0, y: 0)
+    var firstPoint = CGPoint (x: 0, y: 0)
+    var stopPoint = CGPoint (x: 0, y: 0)
+    var swiped = false
+    var color = UIColor(red: 0.5, green: 0, blue: 0.5, alpha: 1.0)
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view, typically from a nib.
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        swiped = false
+        canvas.image = nil
+        if let touch = touches.first {
+            lastPoint = touch.location(in: self.view)
+            firstPoint = touch.location(in: self.view)
+            print("FirstPoint = \(firstPoint)")
+        }
+    }
+    
+    
+    func drawLines(fromPoint: CGPoint, toPoint: CGPoint) {
+        UIGraphicsBeginImageContext(self.view.frame.size)
+        canvas.image?.draw(in: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
+        let contex = UIGraphicsGetCurrentContext()
+        
+        contex?.move(to: CGPoint(x: fromPoint.x, y: fromPoint.y))
+        contex?.addLine(to: CGPoint(x: toPoint.x, y: toPoint.y))
+        contex?.setBlendMode(CGBlendMode.normal)
+        contex?.setLineCap(CGLineCap.round)
+        contex?.setLineWidth(40)
+        contex?.setStrokeColor(color.cgColor)
+        
+        
+        contex?.strokePath()
+        
+        canvas.image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        
+    }
+    
+    func drawRect(_ fromPoint: CGPoint, _ toPoint: CGPoint) {
+        UIGraphicsBeginImageContext(self.view.frame.size);
+        
+        let contexten:CGContext  = UIGraphicsGetCurrentContext()!;
+        
+        let rect = CGRect(x: (fromPoint.x - 20), y: (fromPoint.y - 20), width: ((toPoint.x - fromPoint.x) + 20), height: ((toPoint.y - fromPoint.y) + 40 ))
+        
+        // Filling
+        contexten.setFillColor(red: 1.0, green: 0, blue: 0, alpha: 1.0)
+        contexten.fill(rect)
+        
+        // Frame
+        contexten.setStrokeColor(red: 0, green: 0, blue: 0, alpha: 1.0)
+        contexten.stroke(rect)
+        
+        canvas.image = UIGraphicsGetImageFromCurrentImageContext();
+        
+        UIGraphicsEndImageContext();
+        
+        // Run tessa with rect
+    }
+    
+    
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        swiped = true
+        
+        if let touch = touches.first {
+            let currentPoint = touch.location(in: self.view)
+            drawLines(fromPoint: lastPoint, toPoint: currentPoint)
+            
+            
+            lastPoint = currentPoint
+        }
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if !swiped {
+            drawLines(fromPoint: lastPoint, toPoint: lastPoint)
+            
+            
+        }
+        
+        if let touch = touches.first {
+            stopPoint = touch.location(in: self.view)
+            drawRect(firstPoint, lastPoint)
+            
+            print("StopPoint = \(stopPoint)")
+        }
+        
+        
+        
+    }
+    
+    @IBAction func changeColor(_ sender: UIButton) {
+        let index = sender.tag
+        
+        switch index {
+        case 1:
+            color = UIColor(red: 115.0 / 255.0, green: 250.0 / 255.0 , blue: 121.0 / 255.0, alpha: 1.0)
+        case 2:
+            color = UIColor(red: 190.0 / 255.0 , green: 48.0 / 255.0, blue: 133.0 / 255.0, alpha: 1.0)
+        case 3:
+            color = UIColor(red: 0, green: 180.0 / 255.0, blue: 1.0, alpha: 1.0)
+        default:
+            color = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0)
+        }
+    }
+    
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    
+}
 
 
 
+*/

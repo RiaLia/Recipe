@@ -10,6 +10,8 @@
 		1017BE682080AD9D005D350B /* SecondCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1017BE672080AD9D005D350B /* SecondCollectionViewCell.swift */; };
 		1017BE6A2080ADB1005D350B /* SecondCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1017BE692080ADB1005D350B /* SecondCollectionViewController.swift */; };
 		102B68E020890466002CC4EE /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B68DF20890466002CC4EE /* CameraViewController.swift */; };
+		102B68E7208E2ADA002CC4EE /* PopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B68E6208E2ADA002CC4EE /* PopUpViewController.swift */; };
+		102B68E9208E445E002CC4EE /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B68E8208E445E002CC4EE /* Model.swift */; };
 		10685EB1207E38EE00FEE742 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10685EB0207E38EE00FEE742 /* AppDelegate.swift */; };
 		10685EB6207E38EE00FEE742 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 10685EB4207E38EE00FEE742 /* Main.storyboard */; };
 		10685EB8207E38EE00FEE742 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 10685EB7207E38EE00FEE742 /* Assets.xcassets */; };
@@ -22,6 +24,8 @@
 		1017BE672080AD9D005D350B /* SecondCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondCollectionViewCell.swift; sourceTree = "<group>"; };
 		1017BE692080ADB1005D350B /* SecondCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondCollectionViewController.swift; sourceTree = "<group>"; };
 		102B68DF20890466002CC4EE /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		102B68E6208E2ADA002CC4EE /* PopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpViewController.swift; sourceTree = "<group>"; };
+		102B68E8208E445E002CC4EE /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		10685EAD207E38EE00FEE742 /* Recipe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Recipe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		10685EB0207E38EE00FEE742 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		10685EB5207E38EE00FEE742 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -43,6 +47,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		102B68E1208E09FF002CC4EE /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				102B68E8208E445E002CC4EE /* Model.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		10685EA4207E38EE00FEE742 = {
 			isa = PBXGroup;
 			children = (
@@ -63,9 +75,11 @@
 			isa = PBXGroup;
 			children = (
 				10685EB0207E38EE00FEE742 /* AppDelegate.swift */,
+				102B68E1208E09FF002CC4EE /* Model */,
 				10685EC2207E3D9B00FEE742 /* CollectionViewController.swift */,
 				10685EC4207E4F9B00FEE742 /* CollectionViewCell.swift */,
 				1017BE672080AD9D005D350B /* SecondCollectionViewCell.swift */,
+				102B68E6208E2ADA002CC4EE /* PopUpViewController.swift */,
 				102B68DF20890466002CC4EE /* CameraViewController.swift */,
 				1017BE692080ADB1005D350B /* SecondCollectionViewController.swift */,
 				10685EB4207E38EE00FEE742 /* Main.storyboard */,
@@ -148,12 +162,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				102B68E9208E445E002CC4EE /* Model.swift in Sources */,
 				10685EC3207E3D9B00FEE742 /* CollectionViewController.swift in Sources */,
 				1017BE6A2080ADB1005D350B /* SecondCollectionViewController.swift in Sources */,
 				1017BE682080AD9D005D350B /* SecondCollectionViewCell.swift in Sources */,
 				10685EC5207E4F9B00FEE742 /* CollectionViewCell.swift in Sources */,
 				10685EB1207E38EE00FEE742 /* AppDelegate.swift in Sources */,
 				102B68E020890466002CC4EE /* CameraViewController.swift in Sources */,
+				102B68E7208E2ADA002CC4EE /* PopUpViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
