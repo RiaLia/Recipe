@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import TesseractOCR
 
-class CameraViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+class CameraViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, G8TesseractDelegate {
 
     @IBOutlet weak var addPhotoBtn: UIButton!
     @IBOutlet weak var imageView: UIImageView!
@@ -17,6 +18,10 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
     @IBOutlet weak var brushBtn: UIButton!
     @IBOutlet weak var markBtn: UIButton!
     @IBOutlet weak var deleteBtn: UIButton!
+    @IBOutlet weak var greenBtn: UIButton!
+    @IBOutlet weak var magentaBtn: UIButton!
+    @IBOutlet weak var lgBlueBtn: UIButton!
+    
     var defaults = UserDefaults.standard
     var recipies : [String : Any] = [:]
     
@@ -27,12 +32,22 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
     var swiped = false
     var color = UIColor(red: 0.5, green: 0, blue: 0.5, alpha: 1.0)
     
+    var lgBlueColor = UIColor(red: 0, green: 180.0 / 255.0, blue: 1.0, alpha: 1.0)
+    var magentaColor = UIColor(red: 190.0 / 255.0 , green: 48.0 / 255.0, blue: 133.0 / 255.0, alpha: 1.0)
+    var greenColor = UIColor(red: 115.0 / 255.0, green: 250.0 / 255.0 , blue: 121.0 / 255.0, alpha: 1.0)
+    
+    @IBOutlet weak var brushLabel: UILabel!
+    var brushSize = 0
+    
+    @IBOutlet weak var plusBtn: UIButton!
+    @IBOutlet weak var minusBtn: UIButton!
     
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        brushSize = 40
+        
     }
     
     
@@ -53,7 +68,6 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
-       // imagePicker.allowsEditing = true
        
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             let cameraButton = UIAlertAction(title: "Use Camera",
@@ -81,8 +95,7 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
     
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        
-       // let editedImage = info[UIImagePickerControllerEditedImage] as! UIImage
+     
         let originalImage = info[UIImagePickerControllerOriginalImage] as! UIImage
         let scaledImage = originalImage.scaleImage(640)
         imageView.image = scaledImage
@@ -91,7 +104,6 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         picker.dismiss(animated: true, completion: nil)
         addPhotoBtn.isHidden = true
         approvePhoto()
-        
     }
     
     
@@ -122,60 +134,44 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         markBtn.isHidden = false
         saveBtn.isHidden = false
         deleteBtn.isHidden = false
-        
-        
-        // Skapa Pan, och ev pinch
-       
-        
+        brushLabel.isHidden = false
+        plusBtn.isHidden = false
+        minusBtn.isHidden = false
+    
     }
     
     
     @IBAction func savedClicked(_ sender: Any) {
-        // Spara informationen på lämpligt ställe.
-        // kanske i en array med dictioneries i CameraModel?
-        // Keys borde då vara: Titel, Category, Image
-        // För enkelhetes skull bör vara varje recept bara var i en kategori? 
-        print("Saved Clicked")
     }
     
     @IBAction func brushClicked(_ sender: Any) {
-         //Ta fram color palett
-         // Pensel för titel
-         // Spara ner makrering och kör tessa
-        
-        // Testa om det går att köra tessa i bakgrunden
-        print("Brush Clicked")
-        
         if let maybeRecipies = defaults.dictionary(forKey: "Recipies") {
             recipies = maybeRecipies
         } else {
             recipies = [:]
         }
-        
-       
-        print(recipies)
-       
     }
     
     @IBAction func penClicked(_ sender: Any) {
-         
+    }
+    
+    @IBAction func palettClicked(_ sender: Any) {
+        self.penBtn.isHidden = true
+        self.brushBtn.isHidden = true
+        self.markBtn.isHidden = true
+        self.saveBtn.isHidden = true
+        self.deleteBtn.isHidden = true
+        self.brushLabel.isHidden = true
+        self.plusBtn.isHidden = true
+        self.minusBtn.isHidden = true
         
-        print("Pen Clicked")
+        greenBtn.isHidden = false
+        magentaBtn.isHidden = false
+        lgBlueBtn.isHidden = false
+        
     }
     
-    @IBAction func markClicked(_ sender: Any) {
-        // Kvadratisk markering för tumbnail
-        // Crop to mark
-        print("Mark Clicked")
-    }
-    
-    
-    
-    
-    
-    
-    
-    
+ 
     
     @IBAction func deleteClicked(_ sender: Any) {
         
@@ -185,22 +181,22 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
             
             self.addPhotoBtn.isHidden = false
             self.imageView.image = nil
+            self.canvas.image = nil
             
             self.penBtn.isHidden = true
             self.brushBtn.isHidden = true
             self.markBtn.isHidden = true
             self.saveBtn.isHidden = true
             self.deleteBtn.isHidden = true
+            self.brushLabel.isHidden = true
+            self.plusBtn.isHidden = true
+            self.minusBtn.isHidden = true
         }
         deleteSheet.addAction(yesButton)
         
         let noButton = UIAlertAction(title: "No", style: .default) { (alert) -> Void in
-
-            
         }
         deleteSheet.addAction(noButton)
-        
-        
         deleteSheet.view.tintColor = UIColor.black
         present(deleteSheet, animated: true)
      
@@ -213,7 +209,6 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         if let touch = touches.first {
             lastPoint = touch.location(in: canvas)
             firstPoint = touch.location(in: canvas)
-            print("FirstPoint = \(firstPoint)")
         }
     }
     
@@ -227,7 +222,7 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         contex?.addLine(to: CGPoint(x: toPoint.x, y: toPoint.y))
         contex?.setBlendMode(CGBlendMode.normal)
         contex?.setLineCap(CGLineCap.round)
-        contex?.setLineWidth(40)
+        contex?.setLineWidth(CGFloat(brushSize))
         contex?.setStrokeColor(color.cgColor)
         
         contex?.strokePath()
@@ -245,11 +240,6 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         
         let rect = CGRect(x: (fromPoint.x - 20), y: (fromPoint.y - 20), width: ((toPoint.x - fromPoint.x) + 20), height: ((toPoint.y - fromPoint.y) + 40 ))
         
-        // Filling
-      //  contexten.setFillColor(red: 1.0, green: 0, blue: 0, alpha: 1.0)
-      //  contexten.fill(rect)
-        
-        // Frame
         contexten.setStrokeColor(red: 0, green: 0, blue: 0, alpha: 1.0)
         contexten.stroke(rect)
         
@@ -257,7 +247,25 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         
         UIGraphicsEndImageContext();
         
-        // Run tessa with rect
+        runTessa(rect)
+    }
+    
+ 
+    func runTessa(_ rect: CGRect){
+        if let tesseract = G8Tesseract(language: "eng+swe") {
+            // tesseract.engineMode = .tesseractCubeCombined
+            tesseract.pageSegmentationMode = .auto
+            
+            tesseract.delegate = self
+            tesseract.image = imageView.image?.g8_blackAndWhite()
+            tesseract.rect = rect
+        
+            tesseract.recognize()
+            
+            print(tesseract.recognizedText)
+        }
+        
+        
     }
     
     
@@ -268,8 +276,6 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         if let touch = touches.first {
             let currentPoint = touch.location(in: canvas)
             drawLines(fromPoint: lastPoint, toPoint: currentPoint)
-            
-            
             lastPoint = currentPoint
         }
     }
@@ -282,7 +288,6 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         if let touch = touches.first {
             stopPoint = touch.location(in: canvas)
             drawRect(firstPoint, lastPoint)
-            print("StopPoint = \(stopPoint)")
         }
         
     }
@@ -292,15 +297,44 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         
         switch index {
         case 1:
-            color = UIColor(red: 115.0 / 255.0, green: 250.0 / 255.0 , blue: 121.0 / 255.0, alpha: 1.0)
+            color = greenColor
+            greenBtn.isHidden = true
+            magentaBtn.isHidden = true
+            lgBlueBtn.isHidden = true
+            startEdditing()
         case 2:
-            color = UIColor(red: 190.0 / 255.0 , green: 48.0 / 255.0, blue: 133.0 / 255.0, alpha: 1.0)
+            color = magentaColor
+            greenBtn.isHidden = true
+            magentaBtn.isHidden = true
+            lgBlueBtn.isHidden = true
+            startEdditing()
         case 3:
-            color = UIColor(red: 0, green: 180.0 / 255.0, blue: 1.0, alpha: 1.0)
+            color = lgBlueColor
+            greenBtn.isHidden = true
+            magentaBtn.isHidden = true
+            lgBlueBtn.isHidden = true
+            startEdditing()
         default:
             color = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0)
         }
     }
+    
+    @IBAction func changeSize(_ sender: UIButton) {
+        let index = sender.tag
+        
+        switch index {
+        case 1:
+            brushSize -= 5
+            brushLabel.text = String(brushSize)
+        case 2:
+            brushSize += 5
+            brushLabel.text = String(brushSize)
+        default:
+            brushSize = 40
+            
+        }
+    }
+    
     
 }
     
@@ -328,144 +362,3 @@ extension UIImage {
     }
 }
 
-
-/*
-
-//
-//  ViewController.swift
-//  DemoDraw
-//
-//  Created by Ria Buhlin on 2018-04-25.
-//  Copyright © 2018 Ria Buhlin. All rights reserved.
-//
-
-import UIKit
-
-class ViewController: UIViewController {
-    
-    @IBOutlet weak var canvas: UIImageView!
-    var lastPoint = CGPoint (x: 0, y: 0)
-    var firstPoint = CGPoint (x: 0, y: 0)
-    var stopPoint = CGPoint (x: 0, y: 0)
-    var swiped = false
-    var color = UIColor(red: 0.5, green: 0, blue: 0.5, alpha: 1.0)
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        swiped = false
-        canvas.image = nil
-        if let touch = touches.first {
-            lastPoint = touch.location(in: self.view)
-            firstPoint = touch.location(in: self.view)
-            print("FirstPoint = \(firstPoint)")
-        }
-    }
-    
-    
-    func drawLines(fromPoint: CGPoint, toPoint: CGPoint) {
-        UIGraphicsBeginImageContext(self.view.frame.size)
-        canvas.image?.draw(in: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
-        let contex = UIGraphicsGetCurrentContext()
-        
-        contex?.move(to: CGPoint(x: fromPoint.x, y: fromPoint.y))
-        contex?.addLine(to: CGPoint(x: toPoint.x, y: toPoint.y))
-        contex?.setBlendMode(CGBlendMode.normal)
-        contex?.setLineCap(CGLineCap.round)
-        contex?.setLineWidth(40)
-        contex?.setStrokeColor(color.cgColor)
-        
-        
-        contex?.strokePath()
-        
-        canvas.image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        
-    }
-    
-    func drawRect(_ fromPoint: CGPoint, _ toPoint: CGPoint) {
-        UIGraphicsBeginImageContext(self.view.frame.size);
-        
-        let contexten:CGContext  = UIGraphicsGetCurrentContext()!;
-        
-        let rect = CGRect(x: (fromPoint.x - 20), y: (fromPoint.y - 20), width: ((toPoint.x - fromPoint.x) + 20), height: ((toPoint.y - fromPoint.y) + 40 ))
-        
-        // Filling
-        contexten.setFillColor(red: 1.0, green: 0, blue: 0, alpha: 1.0)
-        contexten.fill(rect)
-        
-        // Frame
-        contexten.setStrokeColor(red: 0, green: 0, blue: 0, alpha: 1.0)
-        contexten.stroke(rect)
-        
-        canvas.image = UIGraphicsGetImageFromCurrentImageContext();
-        
-        UIGraphicsEndImageContext();
-        
-        // Run tessa with rect
-    }
-    
-    
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        swiped = true
-        
-        if let touch = touches.first {
-            let currentPoint = touch.location(in: self.view)
-            drawLines(fromPoint: lastPoint, toPoint: currentPoint)
-            
-            
-            lastPoint = currentPoint
-        }
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if !swiped {
-            drawLines(fromPoint: lastPoint, toPoint: lastPoint)
-            
-            
-        }
-        
-        if let touch = touches.first {
-            stopPoint = touch.location(in: self.view)
-            drawRect(firstPoint, lastPoint)
-            
-            print("StopPoint = \(stopPoint)")
-        }
-        
-        
-        
-    }
-    
-    @IBAction func changeColor(_ sender: UIButton) {
-        let index = sender.tag
-        
-        switch index {
-        case 1:
-            color = UIColor(red: 115.0 / 255.0, green: 250.0 / 255.0 , blue: 121.0 / 255.0, alpha: 1.0)
-        case 2:
-            color = UIColor(red: 190.0 / 255.0 , green: 48.0 / 255.0, blue: 133.0 / 255.0, alpha: 1.0)
-        case 3:
-            color = UIColor(red: 0, green: 180.0 / 255.0, blue: 1.0, alpha: 1.0)
-        default:
-            color = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0)
-        }
-    }
-    
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    
-}
-
-
-
-*/
