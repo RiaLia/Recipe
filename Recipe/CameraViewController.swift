@@ -8,6 +8,7 @@
 
 import UIKit
 import TesseractOCR
+import CoreImage
 
 class CameraViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, G8TesseractDelegate {
 
@@ -49,18 +50,6 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         brushSize = 40
         
     }
-    
-    
-    override func viewWillAppear(_ animated: Bool) {
-   
-        
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        
-    }
-    
 
     @IBAction func addPhoto(_ sender: Any) {
         
@@ -84,16 +73,12 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
                                             self.present(imagePicker, animated: true)
         }
         imagePickerActionSheet.addAction(libraryButton)
-        // 2
         let cancelButton = UIAlertAction(title: "Cancel", style: .cancel)
         imagePickerActionSheet.addAction(cancelButton)
-        // 3
         imagePickerActionSheet.view.tintColor = UIColor.black
         present(imagePickerActionSheet, animated: true)
     }
-    
-    
-    
+  
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
      
         let originalImage = info[UIImagePickerControllerOriginalImage] as! UIImage
@@ -125,9 +110,7 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         photoApproveSheet.view.tintColor = UIColor.black
         present(photoApproveSheet, animated: true)
     }
-    
-    
-    
+   
     func startEdditing() {
         penBtn.isHidden = false
         brushBtn.isHidden = false
@@ -137,11 +120,21 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         brushLabel.isHidden = false
         plusBtn.isHidden = false
         minusBtn.isHidden = false
-    
     }
     
+    func stopEdditing() {
+        self.penBtn.isHidden = true
+        self.brushBtn.isHidden = true
+        self.saveBtn.isHidden = true
+        self.deleteBtn.isHidden = true
+        self.markBtn.isHidden = true
+        self.brushLabel.isHidden = true
+        self.plusBtn.isHidden = true
+        self.minusBtn.isHidden = true
+    }
     
     @IBAction func savedClicked(_ sender: Any) {
+       
     }
     
     @IBAction func brushClicked(_ sender: Any) {
@@ -152,26 +145,14 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         }
     }
     
-    @IBAction func penClicked(_ sender: Any) {
-    }
-    
     @IBAction func palettClicked(_ sender: Any) {
-        self.penBtn.isHidden = true
-        self.brushBtn.isHidden = true
-        self.markBtn.isHidden = true
-        self.saveBtn.isHidden = true
-        self.deleteBtn.isHidden = true
-        self.brushLabel.isHidden = true
-        self.plusBtn.isHidden = true
-        self.minusBtn.isHidden = true
-        
+      
+        stopEdditing()
+        markBtn.isHidden = false
         greenBtn.isHidden = false
         magentaBtn.isHidden = false
         lgBlueBtn.isHidden = false
-        
     }
-    
- 
     
     @IBAction func deleteClicked(_ sender: Any) {
         
@@ -183,14 +164,7 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
             self.imageView.image = nil
             self.canvas.image = nil
             
-            self.penBtn.isHidden = true
-            self.brushBtn.isHidden = true
-            self.markBtn.isHidden = true
-            self.saveBtn.isHidden = true
-            self.deleteBtn.isHidden = true
-            self.brushLabel.isHidden = true
-            self.plusBtn.isHidden = true
-            self.minusBtn.isHidden = true
+            self.stopEdditing()
         }
         deleteSheet.addAction(yesButton)
         
@@ -199,9 +173,7 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         deleteSheet.addAction(noButton)
         deleteSheet.view.tintColor = UIColor.black
         present(deleteSheet, animated: true)
-     
     }
-    
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         swiped = false
@@ -211,7 +183,6 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
             firstPoint = touch.location(in: canvas)
         }
     }
-    
     
     func drawLines(fromPoint: CGPoint, toPoint: CGPoint) {
         UIGraphicsBeginImageContext(canvas.frame.size)
@@ -229,8 +200,6 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         
         canvas.image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        
-        
     }
     
     func drawRect(_ fromPoint: CGPoint, _ toPoint: CGPoint) {
@@ -238,38 +207,20 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         
         let contexten:CGContext  = UIGraphicsGetCurrentContext()!;
         
-        let rect = CGRect(x: (fromPoint.x - 20), y: (fromPoint.y - 20), width: ((toPoint.x - fromPoint.x) + 20), height: ((toPoint.y - fromPoint.y) + 40 ))
+        let rect = CGRect(x: (fromPoint.x - 20), y: (fromPoint.y - 20), width: ((toPoint.x - fromPoint.x) + 20), height: ((toPoint.y - fromPoint.y) + CGFloat(brushSize) ))
         
         contexten.setStrokeColor(red: 0, green: 0, blue: 0, alpha: 1.0)
         contexten.stroke(rect)
         
-        canvas.image = UIGraphicsGetImageFromCurrentImageContext();
+      //  canvas.image = UIGraphicsGetImageFromCurrentImageContext();
         
         UIGraphicsEndImageContext();
         
         runTessa(rect)
     }
     
- 
-    func runTessa(_ rect: CGRect){
-        if let tesseract = G8Tesseract(language: "eng+swe") {
-            // tesseract.engineMode = .tesseractCubeCombined
-            tesseract.pageSegmentationMode = .auto
-            
-            tesseract.delegate = self
-            tesseract.image = imageView.image?.g8_blackAndWhite()
-            tesseract.rect = rect
-        
-            tesseract.recognize()
-            
-            print(tesseract.recognizedText)
-        }
-        
-        
-    }
-    
-    
-    
+
+
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         swiped = true
         
@@ -284,12 +235,63 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         if !swiped {
             drawLines(fromPoint: lastPoint, toPoint: lastPoint)
         }
-        
         if let touch = touches.first {
             stopPoint = touch.location(in: canvas)
             drawRect(firstPoint, lastPoint)
         }
-        
+    }
+    
+    func runTessa(_ rect: CGRect){
+        if let tesseract = G8Tesseract(language: "eng+swe") {
+            tesseract.pageSegmentationMode = .auto
+            
+            tesseract.delegate = self
+            
+            var outputImage = CIImage()
+            var newUIImage = UIImage()
+
+            let imagen = imageView.image
+            let cgImagen = imagen?.cgImage
+            let ciImagen = CIImage(cgImage: cgImagen!)
+            let contex = CIContext(options: nil)
+            
+            outputImage = ciImagen
+                .applyingFilter(
+                    "CIColorControls",
+                    parameters: [
+                        kCIInputSaturationKey: 0
+                    ])
+                .applyingFilter(
+                    "CIColorControls",
+                    parameters: [
+                        kCIInputContrastKey: 5
+                    ])
+                .applyingFilter(
+                    "CINoiseReduction",
+                    parameters: [
+                        kCIInputSharpnessKey: 2
+                    ])
+            
+            
+            let cgimg = contex.createCGImage(outputImage, from: outputImage.extent)
+            newUIImage = UIImage(cgImage: cgimg!)
+           // imageView.image = newUIImage;
+            
+            tesseract.image = newUIImage.g8_blackAndWhite()
+            
+            tesseract.rect = rect
+            
+            tesseract.recognize()
+            
+            print(tesseract.recognizedText!)
+        }
+    }
+    
+    
+    func showColors() {
+        greenBtn.isHidden = true
+        magentaBtn.isHidden = true
+        lgBlueBtn.isHidden = true
     }
     
     @IBAction func changeColor(_ sender: UIButton) {
@@ -298,21 +300,15 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         switch index {
         case 1:
             color = greenColor
-            greenBtn.isHidden = true
-            magentaBtn.isHidden = true
-            lgBlueBtn.isHidden = true
+            showColors()
             startEdditing()
         case 2:
             color = magentaColor
-            greenBtn.isHidden = true
-            magentaBtn.isHidden = true
-            lgBlueBtn.isHidden = true
+            showColors()
             startEdditing()
         case 3:
             color = lgBlueColor
-            greenBtn.isHidden = true
-            magentaBtn.isHidden = true
-            lgBlueBtn.isHidden = true
+            showColors()
             startEdditing()
         default:
             color = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0)
@@ -334,8 +330,6 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
             
         }
     }
-    
-    
 }
     
 

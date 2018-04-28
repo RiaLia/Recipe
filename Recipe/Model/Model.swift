@@ -9,7 +9,7 @@
 import Foundation
 
 
- class CameraModel {
+class CameraModel {
     
  var titles: [Recipe]?
  
@@ -21,6 +21,14 @@ import Foundation
         }
  titles?.append(recipe)
     }
+    
+    
+    func addInfo(title: String, category: String) {
+        let recipe = Recipe()
+        recipe.title = title
+        recipe.category = category
+        titles?.append(recipe)
+    }
  
  }
  
@@ -28,6 +36,7 @@ import Foundation
  class Recipe {
     var title: String?
     var category: String?
+    
  }
 
 
