@@ -13,7 +13,9 @@
 		102B68E020890466002CC4EE /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B68DF20890466002CC4EE /* CameraViewController.swift */; };
 		102B68E7208E2ADA002CC4EE /* PopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B68E6208E2ADA002CC4EE /* PopUpViewController.swift */; };
 		102B68E9208E445E002CC4EE /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B68E8208E445E002CC4EE /* Model.swift */; };
-		1068348020951292000F6590 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1068347E20951292000F6590 /* DataModel.xcdatamodeld */; };
+		1068349820960F13000F6590 /* DB.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1068349620960F12000F6590 /* DB.xcdatamodeld */; };
+		1068349B20960F79000F6590 /* Recipe+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1068349920960F79000F6590 /* Recipe+CoreDataClass.swift */; };
+		1068349C20960F79000F6590 /* Recipe+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1068349A20960F79000F6590 /* Recipe+CoreDataProperties.swift */; };
 		10685EB1207E38EE00FEE742 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10685EB0207E38EE00FEE742 /* AppDelegate.swift */; };
 		10685EB6207E38EE00FEE742 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 10685EB4207E38EE00FEE742 /* Main.storyboard */; };
 		10685EB8207E38EE00FEE742 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 10685EB7207E38EE00FEE742 /* Assets.xcassets */; };
@@ -29,7 +31,9 @@
 		102B68DF20890466002CC4EE /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		102B68E6208E2ADA002CC4EE /* PopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpViewController.swift; sourceTree = "<group>"; };
 		102B68E8208E445E002CC4EE /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
-		1068347F20951292000F6590 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
+		1068349720960F13000F6590 /* DB.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DB.xcdatamodel; sourceTree = "<group>"; };
+		1068349920960F79000F6590 /* Recipe+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Recipe+CoreDataClass.swift"; sourceTree = "<group>"; };
+		1068349A20960F79000F6590 /* Recipe+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Recipe+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		10685EAD207E38EE00FEE742 /* Recipe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Recipe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		10685EB0207E38EE00FEE742 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		10685EB5207E38EE00FEE742 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -67,6 +71,8 @@
 		10685EA4207E38EE00FEE742 = {
 			isa = PBXGroup;
 			children = (
+				1068349920960F79000F6590 /* Recipe+CoreDataClass.swift */,
+				1068349A20960F79000F6590 /* Recipe+CoreDataProperties.swift */,
 				10685EAF207E38EE00FEE742 /* Recipe */,
 				10685EAE207E38EE00FEE742 /* Products */,
 				6FF4D8F72F6705D62AC71261 /* Pods */,
@@ -97,7 +103,7 @@
 				10A020702091150C00EC06B0 /* tessdata */,
 				10685EB7207E38EE00FEE742 /* Assets.xcassets */,
 				10685EB9207E38EE00FEE742 /* LaunchScreen.storyboard */,
-				1068347E20951292000F6590 /* DataModel.xcdatamodeld */,
+				1068349620960F12000F6590 /* DB.xcdatamodeld */,
 				10685EBC207E38EE00FEE742 /* Info.plist */,
 			);
 			path = Recipe;
@@ -253,10 +259,12 @@
 				102B68E9208E445E002CC4EE /* Model.swift in Sources */,
 				10685EC3207E3D9B00FEE742 /* CollectionViewController.swift in Sources */,
 				1017BE6A2080ADB1005D350B /* SecondCollectionViewController.swift in Sources */,
+				1068349820960F13000F6590 /* DB.xcdatamodeld in Sources */,
 				1017BE682080AD9D005D350B /* SecondCollectionViewCell.swift in Sources */,
+				1068349B20960F79000F6590 /* Recipe+CoreDataClass.swift in Sources */,
 				10685EC5207E4F9B00FEE742 /* CollectionViewCell.swift in Sources */,
 				10685EB1207E38EE00FEE742 /* AppDelegate.swift in Sources */,
-				1068348020951292000F6590 /* DataModel.xcdatamodeld in Sources */,
+				1068349C20960F79000F6590 /* Recipe+CoreDataProperties.swift in Sources */,
 				102B68E020890466002CC4EE /* CameraViewController.swift in Sources */,
 				102B68E7208E2ADA002CC4EE /* PopUpViewController.swift in Sources */,
 			);
@@ -445,13 +453,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		1068347E20951292000F6590 /* DataModel.xcdatamodeld */ = {
+		1068349620960F12000F6590 /* DB.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				1068347F20951292000F6590 /* DataModel.xcdatamodel */,
+				1068349720960F13000F6590 /* DB.xcdatamodel */,
 			);
-			currentVersion = 1068347F20951292000F6590 /* DataModel.xcdatamodel */;
-			path = DataModel.xcdatamodeld;
+			currentVersion = 1068349720960F13000F6590 /* DB.xcdatamodel */;
+			path = DB.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

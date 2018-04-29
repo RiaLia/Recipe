@@ -11,9 +11,9 @@ import Foundation
 
 class CameraModel {
     
- var titles: [Recipe]?
+ var titles: [Recipes]?
  
- func addRecipe(_ recipe: Recipe) {
+ func addRecipe(_ recipe: Recipes) {
   
  if titles == nil {
     titles = []
@@ -24,16 +24,16 @@ class CameraModel {
     
     
     func addInfo(title: String, category: String) {
-        let recipe = Recipe()
-        recipe.title = title
-        recipe.category = category
-        titles?.append(recipe)
+        let recipes = Recipes()
+        recipes.title = title
+        recipes.category = category
+        titles?.append(recipes)
     }
  
  }
  
  
- class Recipe {
+ class Recipes {
     var title: String?
     var category: String?
     

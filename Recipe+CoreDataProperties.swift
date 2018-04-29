@@ -1,8 +1,9 @@
 //
 //  Recipe+CoreDataProperties.swift
-//  
+//  Recipe
 //
-//  Created by Ria Buhlin on 2018-04-28.
+//  Created by Ria Buhlin on 2018-04-29.
+//  Copyright © 2018 Ria Buhlin. All rights reserved.
 //
 //
 

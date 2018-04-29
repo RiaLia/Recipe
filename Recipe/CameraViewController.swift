@@ -9,6 +9,7 @@
 import UIKit
 import TesseractOCR
 import CoreImage
+import CoreData
 
 class CameraViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, G8TesseractDelegate {
 
@@ -49,6 +50,10 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
     override func viewDidLoad() {
         super.viewDidLoad()
         brushSize = 40
+        
+ 
+        
+
         
     }
     
@@ -142,6 +147,37 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
     @IBAction func savedClicked(_ sender: Any) {
         print("Title = \(String(describing: tempTitle))")
         print("Category = \(String(describing: tempCategory))")
+        
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managesContex = appDelegate.persistentContainer.viewContext
+        
+        let recipeDescription = NSEntityDescription.entity(forEntityName: "Recipe", in: managesContex)
+        
+        let recipe = NSManagedObject(entity: recipeDescription!, insertInto: managesContex) as! Recipe
+        
+        recipe.title = tempTitle
+        recipe.category = tempCategory
+        
+        do {
+            try managesContex.save()
+        } catch {
+            print(error)
+        }
+        
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Recipe")
+        
+
+        
+        do {
+            let results = try managesContex.fetch(fetchRequest)
+            for r in results as! [Recipe] {
+                print("\(String(describing: r.title!)) + \(String(describing: r.category!))")
+            }
+        } catch {
+            print(error)
+        }
+  
     }
     
     @IBAction func brushClicked(_ sender: Any) {
