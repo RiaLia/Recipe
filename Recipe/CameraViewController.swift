@@ -23,9 +23,6 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
     @IBOutlet weak var magentaBtn: UIButton!
     @IBOutlet weak var lgBlueBtn: UIButton!
     
-    var defaults = UserDefaults.standard
-    var recipies : [String : Any] = [:]
-    
     @IBOutlet weak var canvas: UIImageView!
     var lastPoint = CGPoint (x: 0, y: 0)
     var firstPoint = CGPoint (x: 0, y: 0)
@@ -43,12 +40,21 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
     @IBOutlet weak var plusBtn: UIButton!
     @IBOutlet weak var minusBtn: UIButton!
     
+    var tempTitle = ""
+    var tempCategory = ""
+    var tempImage: UIImage?
+    
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         brushSize = 40
         
+    }
+    
+    func addInfo(title: String, category: String) {
+        tempTitle = title
+        tempCategory = category
     }
 
     @IBAction func addPhoto(_ sender: Any) {
@@ -134,15 +140,12 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
     }
     
     @IBAction func savedClicked(_ sender: Any) {
-       
+        print("Title = \(String(describing: tempTitle))")
+        print("Category = \(String(describing: tempCategory))")
     }
     
     @IBAction func brushClicked(_ sender: Any) {
-        if let maybeRecipies = defaults.dictionary(forKey: "Recipies") {
-            recipies = maybeRecipies
-        } else {
-            recipies = [:]
-        }
+ 
     }
     
     @IBAction func palettClicked(_ sender: Any) {
@@ -283,7 +286,8 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
             
             tesseract.recognize()
             
-            print(tesseract.recognizedText!)
+            tempTitle = tesseract.recognizedText!
+            print(tempTitle)
         }
     }
     
@@ -328,6 +332,25 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         default:
             brushSize = 40
             
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let nextVc = segue.destination as! PopUpViewController
+        nextVc.secTempTitle = tempTitle
+        nextVc.secTempCategory = tempCategory
+        
+        
+    }
+    
+    
+    @IBAction func unwind(_ sender: UIStoryboardSegue) {
+        
+        if sender.source is PopUpViewController {
+            if let senderVC = sender.source as? PopUpViewController {
+                tempTitle = senderVC.secTempTitle
+                tempCategory = senderVC.secTempCategory
+            }
         }
     }
 }

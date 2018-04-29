@@ -16,19 +16,17 @@ class PopUpViewController: UIViewController {
     
     @IBOutlet weak var editCategory: UITextField!
     
-    var recipies : [String : Any] = [:]
-    var defaults = UserDefaults.standard
-    
+    var secTempTitle = ""
+    var secTempCategory = ""
+    var sender: UIViewController?
   
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let maybeRecipies = defaults.dictionary(forKey: "Recipies") {
-            recipies = maybeRecipies
-        } else {
-            recipies = [:]
+        if !secTempTitle.isEmpty {
+            editTitle.text = secTempTitle
         }
         
         popUpView.layer.cornerRadius = 10
@@ -43,19 +41,10 @@ class PopUpViewController: UIViewController {
     
     
     @IBAction func save(_ sender: Any) {
-        
-        recipies[editTitle.text!] = editCategory.text!
-        
-        addToDefaults(recipies: recipies)
-        
-        print(recipies)
-  
+       
+        secTempTitle = editTitle.text!
+        secTempCategory = editCategory.text!
         
     }
-    
-    func addToDefaults(recipies: [String: Any]) {
-         defaults.set(recipies, forKey: "Recipies")
-    }
-   
 }
 

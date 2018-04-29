@@ -13,6 +13,7 @@
 		102B68E020890466002CC4EE /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B68DF20890466002CC4EE /* CameraViewController.swift */; };
 		102B68E7208E2ADA002CC4EE /* PopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B68E6208E2ADA002CC4EE /* PopUpViewController.swift */; };
 		102B68E9208E445E002CC4EE /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B68E8208E445E002CC4EE /* Model.swift */; };
+		1068348020951292000F6590 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1068347E20951292000F6590 /* DataModel.xcdatamodeld */; };
 		10685EB1207E38EE00FEE742 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10685EB0207E38EE00FEE742 /* AppDelegate.swift */; };
 		10685EB6207E38EE00FEE742 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 10685EB4207E38EE00FEE742 /* Main.storyboard */; };
 		10685EB8207E38EE00FEE742 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 10685EB7207E38EE00FEE742 /* Assets.xcassets */; };
@@ -28,6 +29,7 @@
 		102B68DF20890466002CC4EE /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		102B68E6208E2ADA002CC4EE /* PopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpViewController.swift; sourceTree = "<group>"; };
 		102B68E8208E445E002CC4EE /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		1068347F20951292000F6590 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		10685EAD207E38EE00FEE742 /* Recipe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Recipe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		10685EB0207E38EE00FEE742 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		10685EB5207E38EE00FEE742 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 				10A020702091150C00EC06B0 /* tessdata */,
 				10685EB7207E38EE00FEE742 /* Assets.xcassets */,
 				10685EB9207E38EE00FEE742 /* LaunchScreen.storyboard */,
+				1068347E20951292000F6590 /* DataModel.xcdatamodeld */,
 				10685EBC207E38EE00FEE742 /* Info.plist */,
 			);
 			path = Recipe;
@@ -253,6 +256,7 @@
 				1017BE682080AD9D005D350B /* SecondCollectionViewCell.swift in Sources */,
 				10685EC5207E4F9B00FEE742 /* CollectionViewCell.swift in Sources */,
 				10685EB1207E38EE00FEE742 /* AppDelegate.swift in Sources */,
+				1068348020951292000F6590 /* DataModel.xcdatamodeld in Sources */,
 				102B68E020890466002CC4EE /* CameraViewController.swift in Sources */,
 				102B68E7208E2ADA002CC4EE /* PopUpViewController.swift in Sources */,
 			);
@@ -439,6 +443,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		1068347E20951292000F6590 /* DataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				1068347F20951292000F6590 /* DataModel.xcdatamodel */,
+			);
+			currentVersion = 1068347F20951292000F6590 /* DataModel.xcdatamodel */;
+			path = DataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 10685EA5207E38EE00FEE742 /* Project object */;
 }
