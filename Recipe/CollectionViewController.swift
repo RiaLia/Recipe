@@ -13,21 +13,18 @@ import UIKit
 class CollectionViewController: UICollectionViewController {
     
    
-    let reuseIdentifier = "collectionCell" // also enter this string as the cell identifier in the storyboard
+    let reuseIdentifier = "collectionCell"
     var categories = ["All", "Bread", "Chicken", "Cookies & Cake", "Dessert", "Fish", "From around the world", "Holidays", "Meat", "Pasta", "Pie", "Stew", "Vegitarian"]
     
     
     // MARK: - UICollectionViewDataSource protocol
-    
-    // tell the collection view how many cells to make
+
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.categories.count
     }
-    
-    // make a cell for each cell index path
+
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        // get a reference to our storyboard cell
+
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath as IndexPath) as! CollectionViewCell
         
         let index = self.categories[indexPath.row]
@@ -51,18 +48,20 @@ class CollectionViewController: UICollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-      
-        // handle tap events
-        print("You selected cell #\(indexPath.item)!")
-      //  print("You selected category: \(cell.id!)")
+        performSegue(withIdentifier: "toRecipes", sender: indexPath)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+      
+        guard let indexPath = sender as? IndexPath else { return }
         
-        //let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath as IndexPath) as! CollectionViewCell
-        
+        let secVC = segue.destination as? SecondCollectionViewController
+        secVC?.category = categories[indexPath.item]
+        }
+
     }
-}
+    
+
 
 /*
 

@@ -7,17 +7,33 @@
 //
 
 import UIKit
+import CoreData
 
 
 
 class SecondCollectionViewController: UICollectionViewController {
     
     let reuseIdentifier = "Cell"
-    
-    var items = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+    var category: String!
+ 
+    var recipes: [Recipe] = []
 
  
-
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managesContex = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Recipe")
+        fetchRequest.returnsObjectsAsFaults = false
+        
+        do {
+            let results = try managesContex.fetch(fetchRequest)
+            recipes = results as! [Recipe]
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
+    }
     /*
     // MARK: - Navigation
 
@@ -32,13 +48,23 @@ class SecondCollectionViewController: UICollectionViewController {
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        return items.count
+        return recipes.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath as IndexPath) as! SecondCollectionViewCell
     
-        cell.label.text = items[indexPath.item]
+        
+        let recipe = recipes[indexPath.item]
+        cell.recipeTitle.text = recipe.value(forKey: "title") as? String
+        cell.id = recipe.value(forKey: "title") as? String
+        if let data = recipe.thumbnail as Data? {
+                cell.recipeThumb.image = UIImage(data: data)
+                    }
+        if let datan = recipe.image as Data? {
+                cell.recipeImage = UIImage(data: datan)
+        }
+        
         cell.layer.borderColor = UIColor.gray.cgColor
         
         
@@ -47,6 +73,27 @@ class SecondCollectionViewController: UICollectionViewController {
     
         return cell
     }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+      //  performSegue(withIdentifier: "toDetail", sender: indexPath)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        
+        if let cell = sender as? SecondCollectionViewCell {
+        let detailVc = segue.destination as? DetailViewController
+            detailVc?.title = cell.id
+            detailVc?.recipeImage = cell.recipeImage
+        } else {
+            print("Something is wrong with the cell")
+        }
+    }
+    
+}
+    
+    
 
     // MARK: UICollectionViewDelegate
 
@@ -79,4 +126,4 @@ class SecondCollectionViewController: UICollectionViewController {
     }
     */
 
-}
+

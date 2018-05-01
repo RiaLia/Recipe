@@ -29,7 +29,7 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
     var firstPoint = CGPoint (x: 0, y: 0)
     var stopPoint = CGPoint (x: 0, y: 0)
     var swiped = false
-    var color = UIColor(red: 0.5, green: 0, blue: 0.5, alpha: 1.0)
+    var color = UIColor(red: 115.0 / 255.0, green: 250.0 / 255.0 , blue: 121.0 / 255.0, alpha: 1.0)
     
     var lgBlueColor = UIColor(red: 0, green: 180.0 / 255.0, blue: 1.0, alpha: 1.0)
     var magentaColor = UIColor(red: 190.0 / 255.0 , green: 48.0 / 255.0, blue: 133.0 / 255.0, alpha: 1.0)
@@ -43,7 +43,7 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
     
     var tempTitle = ""
     var tempCategory = ""
-    var tempImage: UIImage?
+    var tempThumb: UIImage?
     
     
     
@@ -155,6 +155,12 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         
         let recipe = NSManagedObject(entity: recipeDescription!, insertInto: managesContex) as! Recipe
         
+        let photo = imageView.image
+        recipe.image = UIImagePNGRepresentation(photo!) as NSData?
+        
+        let thumbnail = tempThumb
+        recipe.thumbnail = UIImagePNGRepresentation(thumbnail!) as NSData?
+        
         recipe.title = tempTitle
         recipe.category = tempCategory
         
@@ -173,6 +179,7 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
             let results = try managesContex.fetch(fetchRequest)
             for r in results as! [Recipe] {
                 print("\(String(describing: r.title!)) + \(String(describing: r.category!))")
+             //   print("Image: \(String(describing: r.image))")
             }
         } catch {
             print(error)
@@ -251,11 +258,17 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         contexten.setStrokeColor(red: 0, green: 0, blue: 0, alpha: 1.0)
         contexten.stroke(rect)
         
-      //  canvas.image = UIGraphicsGetImageFromCurrentImageContext();
-        
+        if color == lgBlueColor {
+            canvas.image = UIGraphicsGetImageFromCurrentImageContext();
+        }
         UIGraphicsEndImageContext();
         
-        runTessa(rect)
+        if color == greenColor {
+            runTessa(rect)
+        } else if color == lgBlueColor {
+            cropImage(rect)
+        }
+        
     }
     
 
@@ -311,15 +324,10 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
                         kCIInputSharpnessKey: 2
                     ])
             
-            
             let cgimg = contex.createCGImage(outputImage, from: outputImage.extent)
             newUIImage = UIImage(cgImage: cgimg!)
-           // imageView.image = newUIImage;
-            
             tesseract.image = newUIImage.g8_blackAndWhite()
-            
             tesseract.rect = rect
-            
             tesseract.recognize()
             
             tempTitle = tesseract.recognizedText!
@@ -327,6 +335,12 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         }
     }
     
+    func cropImage(_ rect: CGRect){
+        let image = imageView.image
+        let croppedCGImage:CGImage = (image!.cgImage?.cropping(to: rect))!
+        let croppedImage = UIImage(cgImage: croppedCGImage)
+        tempThumb = croppedImage
+    }
     
     func showColors() {
         greenBtn.isHidden = true

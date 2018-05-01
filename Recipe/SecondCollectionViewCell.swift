@@ -10,5 +10,9 @@ import UIKit
 
 class SecondCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var label: UILabel!
+  
+    @IBOutlet weak var recipeTitle: UILabel!
+    @IBOutlet weak var recipeThumb: UIImageView!
+    var id: String?
+    var recipeImage: UIImage?
 }
