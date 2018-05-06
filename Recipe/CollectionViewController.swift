@@ -54,8 +54,12 @@ class CollectionViewController: UICollectionViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
       
         guard let indexPath = sender as? IndexPath else { return }
+
+//        let navVC = segue.destination as! UINavigationController
+//        let secVC = navVC.viewControllers[0] as? SecondCollectionViewController
         
         let secVC = segue.destination as? SecondCollectionViewController
+        secVC?.title = categories[indexPath.item]
         secVC?.category = categories[indexPath.item]
         }
 

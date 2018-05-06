@@ -12,11 +12,11 @@
 		1017BE6A2080ADB1005D350B /* SecondCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1017BE692080ADB1005D350B /* SecondCollectionViewController.swift */; };
 		102B68E020890466002CC4EE /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B68DF20890466002CC4EE /* CameraViewController.swift */; };
 		102B68E7208E2ADA002CC4EE /* PopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B68E6208E2ADA002CC4EE /* PopUpViewController.swift */; };
-		102B68E9208E445E002CC4EE /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B68E8208E445E002CC4EE /* Model.swift */; };
 		1068349820960F13000F6590 /* DB.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1068349620960F12000F6590 /* DB.xcdatamodeld */; };
 		1068349B20960F79000F6590 /* Recipe+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1068349920960F79000F6590 /* Recipe+CoreDataClass.swift */; };
 		1068349C20960F79000F6590 /* Recipe+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1068349A20960F79000F6590 /* Recipe+CoreDataProperties.swift */; };
 		1068349E2098943E000F6590 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1068349D2098943E000F6590 /* DetailViewController.swift */; };
+		106834DC2099C748000F6590 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106834DB2099C748000F6590 /* FilterViewController.swift */; };
 		10685EB1207E38EE00FEE742 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10685EB0207E38EE00FEE742 /* AppDelegate.swift */; };
 		10685EB6207E38EE00FEE742 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 10685EB4207E38EE00FEE742 /* Main.storyboard */; };
 		10685EB8207E38EE00FEE742 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 10685EB7207E38EE00FEE742 /* Assets.xcassets */; };
@@ -31,11 +31,11 @@
 		1017BE692080ADB1005D350B /* SecondCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondCollectionViewController.swift; sourceTree = "<group>"; };
 		102B68DF20890466002CC4EE /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		102B68E6208E2ADA002CC4EE /* PopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpViewController.swift; sourceTree = "<group>"; };
-		102B68E8208E445E002CC4EE /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		1068349720960F13000F6590 /* DB.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DB.xcdatamodel; sourceTree = "<group>"; };
 		1068349920960F79000F6590 /* Recipe+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Recipe+CoreDataClass.swift"; sourceTree = "<group>"; };
 		1068349A20960F79000F6590 /* Recipe+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Recipe+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1068349D2098943E000F6590 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		106834DB2099C748000F6590 /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 		10685EAD207E38EE00FEE742 /* Recipe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Recipe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		10685EB0207E38EE00FEE742 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		10685EB5207E38EE00FEE742 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -62,14 +62,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		102B68E1208E09FF002CC4EE /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				102B68E8208E445E002CC4EE /* Model.swift */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
 		10685EA4207E38EE00FEE742 = {
 			isa = PBXGroup;
 			children = (
@@ -94,11 +86,11 @@
 			isa = PBXGroup;
 			children = (
 				10685EB0207E38EE00FEE742 /* AppDelegate.swift */,
-				102B68E1208E09FF002CC4EE /* Model */,
 				10685EC2207E3D9B00FEE742 /* CollectionViewController.swift */,
 				1017BE692080ADB1005D350B /* SecondCollectionViewController.swift */,
 				1068349D2098943E000F6590 /* DetailViewController.swift */,
 				102B68E6208E2ADA002CC4EE /* PopUpViewController.swift */,
+				106834DB2099C748000F6590 /* FilterViewController.swift */,
 				102B68DF20890466002CC4EE /* CameraViewController.swift */,
 				10685EC4207E4F9B00FEE742 /* CollectionViewCell.swift */,
 				1017BE672080AD9D005D350B /* SecondCollectionViewCell.swift */,
@@ -259,13 +251,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				102B68E9208E445E002CC4EE /* Model.swift in Sources */,
 				10685EC3207E3D9B00FEE742 /* CollectionViewController.swift in Sources */,
 				1017BE6A2080ADB1005D350B /* SecondCollectionViewController.swift in Sources */,
 				1068349E2098943E000F6590 /* DetailViewController.swift in Sources */,
 				1068349820960F13000F6590 /* DB.xcdatamodeld in Sources */,
 				1017BE682080AD9D005D350B /* SecondCollectionViewCell.swift in Sources */,
 				1068349B20960F79000F6590 /* Recipe+CoreDataClass.swift in Sources */,
+				106834DC2099C748000F6590 /* FilterViewController.swift in Sources */,
 				10685EC5207E4F9B00FEE742 /* CollectionViewCell.swift in Sources */,
 				10685EB1207E38EE00FEE742 /* AppDelegate.swift in Sources */,
 				1068349C20960F79000F6590 /* Recipe+CoreDataProperties.swift in Sources */,
@@ -409,8 +401,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3QY9954SLK;
 				INFOPLIST_FILE = Recipe/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-weak_library",
+					"/usr/lib/libstdc++.6.0.9.dylib",
+					"-l\"stdc++\"",
+					"-framework",
+					"\"TesseractOCR\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = RB.Recipe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -424,8 +426,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3QY9954SLK;
 				INFOPLIST_FILE = Recipe/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-weak_library",
+					"/usr/lib/libstdc++.6.0.9.dylib",
+					"-l\"stdc++\"",
+					"-framework",
+					"\"TesseractOCR\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = RB.Recipe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;

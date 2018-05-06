@@ -12,20 +12,37 @@ import CoreData
 
 
 class SecondCollectionViewController: UICollectionViewController {
+
+    
     
     let reuseIdentifier = "Cell"
     var category: String!
+
+    var filterText: String?
+    var filterCategories: [Int] = []
+    var useFilter = false
  
     var recipes: [Recipe] = []
+    var searchResult: [String] = []
 
  
     override func viewDidLoad() {
         super.viewDidLoad()
         
+
+        
+        
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managesContex = appDelegate.persistentContainer.viewContext
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Recipe")
         fetchRequest.returnsObjectsAsFaults = false
+        
+
+        if category != "All" {
+            let filter = category
+            let predicate = NSPredicate(format: "category = %@", filter!)
+            fetchRequest.predicate = predicate
+        }
         
         do {
             let results = try managesContex.fetch(fetchRequest)
@@ -33,17 +50,16 @@ class SecondCollectionViewController: UICollectionViewController {
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
         }
+        
+        
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if useFilter {
+            collectionView?.reloadData()
+        }
     }
-    */
-
+    
     // MARK: UICollectionViewDataSource
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -54,15 +70,17 @@ class SecondCollectionViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath as IndexPath) as! SecondCollectionViewCell
     
-        
         let recipe = recipes[indexPath.item]
+        
+        
         cell.recipeTitle.text = recipe.value(forKey: "title") as? String
         cell.id = recipe.value(forKey: "title") as? String
         if let data = recipe.thumbnail as Data? {
                 cell.recipeThumb.image = UIImage(data: data)
-                    }
+            
         if let datan = recipe.image as Data? {
                 cell.recipeImage = UIImage(data: datan)
+            }
         }
         
         cell.layer.borderColor = UIColor.gray.cgColor
@@ -81,19 +99,34 @@ class SecondCollectionViewController: UICollectionViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        
-        if let cell = sender as? SecondCollectionViewCell {
-        let detailVc = segue.destination as? DetailViewController
-            detailVc?.title = cell.id
-            detailVc?.recipeImage = cell.recipeImage
+        if segue.identifier == "filterSegue" {
+            
         } else {
-            print("Something is wrong with the cell")
+            if let cell = sender as? SecondCollectionViewCell {
+            let detailVc = segue.destination as? DetailViewController
+                detailVc?.title = cell.id
+                detailVc?.recipeImage = cell.recipeImage
+            } else {
+                print("Something is wrong with the cell")
+            }
         }
     }
     
+
+    @IBAction func unwindFromFilter(_ sender: UIStoryboardSegue) {
+        if sender.source is FilterViewController {
+            if let senderVC = sender.source as? FilterViewController {
+                filterText = senderVC.filterText
+                filterCategories = senderVC.filterCategories
+                useFilter = true
+  
+            }
+        }
+        
+    }
+    
 }
-    
-    
+
 
     // MARK: UICollectionViewDelegate
 

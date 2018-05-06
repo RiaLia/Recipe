@@ -37,24 +37,16 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
     
     @IBOutlet weak var brushLabel: UILabel!
     var brushSize = 0
-    
     @IBOutlet weak var plusBtn: UIButton!
     @IBOutlet weak var minusBtn: UIButton!
-    
     var tempTitle = ""
     var tempCategory = ""
     var tempThumb: UIImage?
     
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         brushSize = 40
-        
- 
-        
-
-        
     }
     
     func addInfo(title: String, category: String) {
@@ -63,12 +55,9 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
     }
 
     @IBAction func addPhoto(_ sender: Any) {
-        
         let imagePickerActionSheet = UIAlertController(title: "Add photo", message: nil, preferredStyle: .actionSheet)
-        
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
-       
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             let cameraButton = UIAlertAction(title: "Use Camera",
                                              style: .default) { (alert) -> Void in
@@ -77,7 +66,6 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
             }
             imagePickerActionSheet.addAction(cameraButton)
         }
-        
         let libraryButton = UIAlertAction(title: "Choose From Gallery",
                                           style: .default) { (alert) -> Void in
                                             imagePicker.sourceType = .photoLibrary
@@ -91,33 +79,24 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
     }
   
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-     
         let originalImage = info[UIImagePickerControllerOriginalImage] as! UIImage
         let scaledImage = originalImage.scaleImage(640)
         imageView.image = scaledImage
-        
-   
         picker.dismiss(animated: true, completion: nil)
         addPhotoBtn.isHidden = true
         approvePhoto()
     }
     
-    
     func approvePhoto() {
         let photoApproveSheet = UIAlertController(title: "Approve Photo?", message: nil, preferredStyle: .actionSheet)
-        
         let okButton = UIAlertAction(title: "Yes, Keep this one", style: .default) { (alert) -> Void in
             self.startEdditing()
         }
         photoApproveSheet.addAction(okButton)
-        
         let takeNewButton = UIAlertAction(title: "No, Take new!", style: .default) { (alert) -> Void in
             self.addPhoto(photoApproveSheet)
-           
         }
         photoApproveSheet.addAction(takeNewButton)
-        
-        
         photoApproveSheet.view.tintColor = UIColor.black
         present(photoApproveSheet, animated: true)
     }
@@ -169,12 +148,7 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         } catch {
             print(error)
         }
-        
-        
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Recipe")
-        
-
-        
         do {
             let results = try managesContex.fetch(fetchRequest)
             for r in results as! [Recipe] {
@@ -184,7 +158,6 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         } catch {
             print(error)
         }
-  
     }
     
     @IBAction func brushClicked(_ sender: Any) {
@@ -255,6 +228,8 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         
         let rect = CGRect(x: (fromPoint.x - 20), y: (fromPoint.y - 20), width: ((toPoint.x - fromPoint.x) + 20), height: ((toPoint.y - fromPoint.y) + CGFloat(brushSize) ))
         
+        let cropRect = CGRect(x: fromPoint.x, y: fromPoint.y, width: (toPoint.x - fromPoint.x), height: ((toPoint.y - fromPoint.y) + CGFloat(brushSize) ))
+        
         contexten.setStrokeColor(red: 0, green: 0, blue: 0, alpha: 1.0)
         contexten.stroke(rect)
         
@@ -262,16 +237,16 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
             canvas.image = UIGraphicsGetImageFromCurrentImageContext();
         }
         UIGraphicsEndImageContext();
+
         
         if color == greenColor {
+            
             runTessa(rect)
+            
         } else if color == lgBlueColor {
-            cropImage(rect)
+            cropImage(cropRect)
         }
-        
     }
-    
-
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         swiped = true
@@ -328,12 +303,14 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
             newUIImage = UIImage(cgImage: cgimg!)
             tesseract.image = newUIImage.g8_blackAndWhite()
             tesseract.rect = rect
+
             tesseract.recognize()
-            
+
             tempTitle = tesseract.recognizedText!
             print(tempTitle)
         }
     }
+
     
     func cropImage(_ rect: CGRect){
         let image = imageView.image
@@ -389,10 +366,7 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
         let nextVc = segue.destination as! PopUpViewController
         nextVc.secTempTitle = tempTitle
         nextVc.secTempCategory = tempCategory
-        
-        
     }
-    
     
     @IBAction func unwind(_ sender: UIStoryboardSegue) {
         
@@ -405,6 +379,18 @@ class CameraViewController: UIViewController, UINavigationControllerDelegate, UI
     }
 }
     
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 extension UIImage {
